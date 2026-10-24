@@ -28,8 +28,11 @@ function isWhatsAppNumberConfigured() {
          LAUNDRY_WHATSAPP_NUMBER !== "08060757524";
 }
 
-function showWhatsAppSetupMessage() {
+//function showWhatsAppSetupMessage() {
   alert("Please set Kelly Laundry's real WhatsApp number in script.js first. Find LAUNDRY_WHATSAPP_NUMBER near the top and replace the sample number.");
+}//
+function contact number (){
+console.log(WhatsApp number=08060757524;
 }
 
 function setContactLinks() {
