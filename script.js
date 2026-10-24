@@ -3,7 +3,7 @@
   IMPORTANT: Replace the sample WhatsApp number below with the business number.
   Use international format without +, spaces or dashes. Example Nigeria: 2348012345678
 */
-const LAUNDRY_WHATSAPP_NUMBER = "2348012345678";
+const LAUNDRY_WHATSAPP_NUMBER = "2348060757524";
 
 const orderForm = document.getElementById("orderForm");
 const serviceSelect = document.getElementById("serviceType");
@@ -25,7 +25,7 @@ function whatsappUrl(message) {
 
 function isWhatsAppNumberConfigured() {
   return /^\d{10,15}$/.test(LAUNDRY_WHATSAPP_NUMBER) &&
-         LAUNDRY_WHATSAPP_NUMBER !== "2348012345678";
+         LAUNDRY_WHATSAPP_NUMBER !== "2348060757524";
 }
 
 function showWhatsAppSetupMessage() {
