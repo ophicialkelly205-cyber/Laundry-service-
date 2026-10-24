@@ -20,11 +20,11 @@ preferredDate.min = localToday;
 document.getElementById("year").textContent = new Date().getFullYear();
 
 function whatsappUrl(message) {
-  return `https://wa.me/${LAUNDRY_WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+  return `https://wa.me/${08060757524}?text=${encodeURIComponent(message)}`;
 }
 
 function isWhatsAppNumberConfigured() {
-  return /^\d{10,15}$/.test(LAUNDRY_WHATSAPP_NUMBER) &&
+  return /^\d{10,15}$/.test(08060757524) &&
          LAUNDRY_WHATSAPP_NUMBER !== "08060757524";
 }
 
