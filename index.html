@@ -70,7 +70,8 @@
       <div class="order-intro"><span class="eyebrow">LET'S GET STARTED</span><h2>Your next wash<br>starts <em>right here.</em></h2><p>Fill in the form and send your request to Kelly Laundry on WhatsApp. We'll follow up to confirm the details.</p>
         <div class="order-tip"><span>✦</span><p><b>Quick tip</b><br>The more details you provide, the easier it is for us to prepare your order.</p></div>
       </div>
-      <form id="orderForm" class="order-form">
+
+     */<form id="orderForm" class="order-form">
         <div class="form-title"><div><h3>Place a laundry order</h3><p>Fields marked * are required.</p></div><span class="form-badge">ORDER FORM</span></div>
         <div class="form-grid">
           <label>Full name *<input type="text" id="customerName" name="customerName" placeholder="Your name" required autocomplete="name"></label>
@@ -84,7 +85,65 @@
         <button class="btn btn-primary submit-btn" type="submit">Send order on WhatsApp <span>↗</span></button>
         <p class="form-hint">Your WhatsApp app will open with your order details ready to send.</p>
         <p class="form-error" id="formError" role="alert"></p>
-      </form>
+      </form>*/
+
+
+
+<form id="orderForm">
+
+    <label for="customerName">Full Name *</label>
+    <input
+        type="text"
+        id="customerName"
+        required
+    >
+
+    <label for="customerPhone">Phone Number *</label>
+    <input
+        type="tel"
+        id="customerPhone"
+        required
+    >
+
+    <label for="service">Service Needed *</label>
+    <select id="service" required>
+        <option value="">Select a service</option>
+        <option value="Wash and Fold">Wash & Fold</option>
+        <option value="Ironing">Ironing</option>
+        <option value="Special Garments">Special Garments</option>
+        <option value="Pickup and Delivery">Pickup & Delivery</option>
+    </select>
+
+    <label for="quantity">Estimated Quantity</label>
+    <input
+        type="number"
+        id="quantity"
+        min="1"
+    >
+
+    <label for="preferredDate">Preferred Date *</label>
+    <input
+        type="date"
+        id="preferredDate"
+        required
+    >
+
+    <label for="address">Pickup/Delivery Address *</label>
+    <textarea
+        id="address"
+        required
+    ></textarea>
+
+    <label for="notes">Additional Instructions</label>
+    <textarea id="notes"></textarea>
+
+    <button type="submit">
+        Send Order on WhatsApp
+    </button>
+
+</form>
+
+<script src="script.js"></script>
     </section>
 
     <section class="contact-section" id="contact">
@@ -96,5 +155,6 @@
   <footer><a class="brand footer-brand" href="#home"><span class="brand-icon">KL</span><span>Kelly <b>Laundry</b><small>FRESHNESS YOU CAN TRUST</small></span></a><p>Clean clothes, lighter days.</p><span>© <span id="year"></span> Kelly Laundry. All rights reserved.</span></footer>
   <a class="floating-whatsapp" id="floatingWhatsApp" href="#" target="_blank" rel="noopener" aria-label="Contact Kelly Laundry on WhatsApp">✆</a>
   <script src="script.js"></script>
+
 </body>
 </html>
