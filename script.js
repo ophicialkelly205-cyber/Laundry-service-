@@ -20,7 +20,7 @@ preferredDate.min = localToday;
 document.getElementById("year").textContent = new Date().getFullYear();
 
 function whatsappUrl(message) {
-  return `https://wa.me/${08060757524}?text=${encodeURIComponent(message)}`;
+  return `https://wa.me/${LAUNDRY_WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
 }
 
 function isWhatsAppNumberConfigured() {
@@ -28,12 +28,9 @@ function isWhatsAppNumberConfigured() {
          LAUNDRY_WHATSAPP_NUMBER !== "08060757524";
 }
 
-//function showWhatsAppSetupMessage() {
+/*function showWhatsAppSetupMessage() {
   alert("Please set Kelly Laundry's real WhatsApp number in script.js first. Find LAUNDRY_WHATSAPP_NUMBER near the top and replace the sample number.");
-}//
-function contact number (){
-console.log(WhatsApp number=08060757524;
-}
+}*/
 
 function setContactLinks() {
   const message = "Hello Kelly Laundry, I would like to ask about your laundry services.";
