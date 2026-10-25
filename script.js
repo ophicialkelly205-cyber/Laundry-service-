@@ -1,193 +1,205 @@
-// ========================================
-// KELLY LAUNDRY - ORDER MANAGEMENT
-// ========================================
+// =====================================
+// KELLY LAUNDRY WEBSITE JAVASCRIPT
+// =====================================
 
-// Your business WhatsApp number.
-// Use country code + number without the leading zero or + sign.
+// Business WhatsApp number
+// International format: country code + number, without +
+// Example: 2348012345678
 const LAUNDRY_WHATSAPP_NUMBER = "2348060757524";
 
-document.addEventListener("DOMContentLoaded", function () {
+// Find website elements
+const orderForm = document.getElementById("orderForm");
+const menuToggle = document.getElementById("menuToggle");
+const mainNav = document.getElementById("mainNav");
 
-    const orderForm = document.getElementById("orderForm");
+// Support either version of the form's field IDs
+const customerName = document.getElementById("customerName") ||
+                     document.getElementById("name");
 
-    // Stop if the order form cannot be found.
-    if (!orderForm) {
-        console.error("Order form not found. Check index.html.");
+const customerPhone = document.getElementById("customerPhone") ||
+                      document.getElementById("phone");
+
+const serviceSelect = document.getElementById("service");
+
+const quantityField = document.getElementById("quantity");
+
+const preferredDate = document.getElementById("preferredDate") ||
+                      document.getElementById("date");
+
+const addressField = document.getElementById("address");
+
+const instructionsField = document.getElementById("notes") ||
+                          document.getElementById("instructions");
+
+const formError = document.getElementById("formError");
+
+// Check that the WhatsApp number is configured
+function isWhatsAppNumberConfigured() {
+    return /^\d{10,15}$/.test(LAUNDRY_WHATSAPP_NUMBER);
+}
+
+// Generate WhatsApp link
+function whatsappUrl(message) {
+    return "https://wa.me/" +
+        LAUNDRY_WHATSAPP_NUMBER +
+        "?text=" +
+        encodeURIComponent(message);
+}
+
+// Open WhatsApp with a message
+function openWhatsApp(message) {
+    if (!isWhatsAppNumberConfigured()) {
+        alert("Please check Kelly Laundry's WhatsApp number in script.js.");
         return;
     }
 
-    // Find a form field using any matching ID.
-    function findField(ids) {
-        for (const id of ids) {
-            const field = document.getElementById(id);
+    window.location.href = whatsappUrl(message);
+}
 
-            if (field) {
-                return field;
-            }
+// Set the current year in the footer
+const yearElement = document.getElementById("year");
+
+if (yearElement) {
+    yearElement.textContent = new Date().getFullYear();
+}
+
+// Prevent customers from selecting a date in the past
+if (preferredDate) {
+    const today = new Date();
+
+    const localToday = new Date(
+        today.getTime() - today.getTimezoneOffset() * 60000
+    ).toISOString().split("T")[0];
+
+    preferredDate.min = localToday;
+}
+
+// WhatsApp contact links
+function setContactLinks() {
+    const message =
+        "Hello Kelly Laundry, I would like to ask about your laundry services.";
+
+    const contactWhatsApp = document.getElementById("contactWhatsApp");
+    const floatingWhatsApp = document.getElementById("floatingWhatsApp");
+
+    const href = whatsappUrl(message);
+
+    if (contactWhatsApp) {
+        contactWhatsApp.href = href;
+    }
+
+    if (floatingWhatsApp) {
+        floatingWhatsApp.href = href;
+    }
+}
+
+setContactLinks();
+
+// Mobile navigation menu
+if (menuToggle && mainNav) {
+    menuToggle.addEventListener("click", function () {
+        const isOpen = mainNav.classList.toggle("open");
+
+        menuToggle.setAttribute("aria-expanded", String(isOpen));
+
+        menuToggle.setAttribute(
+            "aria-label",
+            isOpen ? "Close navigation" : "Open navigation"
+        );
+
+        menuToggle.textContent = isOpen ? "×" : "☰";
+    });
+
+    mainNav.querySelectorAll("a").forEach(function (link) {
+        link.addEventListener("click", function () {
+            mainNav.classList.remove("open");
+
+            menuToggle.setAttribute("aria-expanded", "false");
+            menuToggle.setAttribute("aria-label", "Open navigation");
+            menuToggle.textContent = "☰";
+        });
+    });
+}
+
+// Select a service when a service link is clicked
+document.querySelectorAll("[data-service]").forEach(function (link) {
+    link.addEventListener("click", function () {
+        if (serviceSelect) {
+            serviceSelect.value = link.dataset.service;
         }
+    });
+});
 
-        return null;
-    }
-
-    // Display an error message.
-    function showError(message) {
-        alert(message);
-    }
-
-    // Submit the order.
+// Handle the order form only once
+if (orderForm) {
     orderForm.addEventListener("submit", function (event) {
-
         event.preventDefault();
 
-        // Find the form fields.
-        const nameField = findField([
-            "customerName", "name", "fullName"
-        ]);
+        if (formError) {
+            formError.textContent = "";
+        }
 
-        const phoneField = findField([
-            "customerPhone", "phone", "phoneNumber"
-        ]);
-
-        const serviceField = findField([
-            "service", "serviceNeeded"
-        ]);
-
-        const quantityField = findField([
-            "quantity", "estimatedQuantity"
-        ]);
-
-        const dateField = findField([
-            "preferredDate", "date"
-        ]);
-
-        const addressField = findField([
-            "address", "pickupAddress", "customerAddress"
-        ]);
-
-        const notesField = findField([
-            "notes", "instructions", "additionalInstructions"
-        ]);
-
-        // Check that the essential fields exist.
-        if (
-            !nameField ||
-            !phoneField ||
-            !serviceField ||
-            !addressField
-        ) {
-            console.error("Missing form fields:", {
-                nameField,
-                phoneField,
-                serviceField,
-                addressField
-            });
-
-            showError(
-                "The order form has a configuration problem. " +
-                "Please check the field IDs in index.html."
-            );
-
+        if (!orderForm.reportValidity()) {
             return;
         }
 
-        // Read the customer's information.
-        const customerName = nameField.value.trim();
-        const customerPhone = phoneField.value.trim();
-        const service = serviceField.value;
+        if (!customerName || !customerPhone ||
+            !serviceSelect || !addressField) {
+            alert(
+                "Some order form fields are missing. Please check index.html."
+            );
+            return;
+        }
+
+        const name = customerName.value.trim();
+        const phone = customerPhone.value.trim();
+        const service = serviceSelect.value;
+
         const quantity = quantityField
             ? quantityField.value.trim() || "Not specified"
             : "Not specified";
 
-        const preferredDate = dateField
-            ? dateField.value || "Not specified"
+        const date = preferredDate
+            ? preferredDate.value || "Not specified"
             : "Not specified";
 
         const address = addressField.value.trim();
 
-        const instructions = notesField
-            ? notesField.value.trim() || "None"
+        const instructions = instructionsField
+            ? instructionsField.value.trim() || "None"
             : "None";
 
-        // Validate the customer's details.
-        if (
-            !customerName ||
-            !customerPhone ||
-            !service ||
-            !address
-        ) {
-            showError(
-                "Please complete your name, phone number, " +
-                "service and address."
-            );
+        const message = [
+            "Hello Kelly Laundry! I'd like to place a laundry order.",
+            "",
+            "Name: " + name,
+            "Customer phone: " + phone,
+            "Service: " + service,
+            "Estimated quantity: " + quantity,
+            "Preferred date: " + date,
+            "Pickup/drop-off address: " + address,
+            "Additional instructions: " + instructions,
+            "",
+            "Please confirm the price and availability. Thank you."
+        ].join("\n");
 
-            return;
-        }
-
-        // Check the business WhatsApp number.
-        if (!/^\d{10,15}$/.test(LAUNDRY_WHATSAPP_NUMBER)) {
-            showError(
-                "The business WhatsApp number is invalid. " +
-                "Please check script.js."
-            );
-
-            return;
-        }
-
-        // Generate a unique order reference for this attempt.
-        const orderReference =
-            "KL-" + Date.now().toString().slice(-8);
-
-        // Build the order message.
-        const orderMessage = `
-KELLY LAUNDRY - NEW ORDER
-
-Order Reference: ${orderReference}
-
-CUSTOMER DETAILS
-Name: ${customerName}
-Customer Phone: ${customerPhone}
-
-ORDER DETAILS
-Service: ${service}
-Estimated Quantity: ${quantity}
-Preferred Date: ${preferredDate}
-Pickup/Delivery Address: ${address}
-
-Additional Instructions:
-${instructions}
-
-Please confirm receipt of this order and provide the price.
-Thank you.
-        `.trim();
-
-        // Open WhatsApp with the order details.
-        const whatsappLink =
-            "https://wa.me/" +
-            LAUNDRY_WHATSAPP_NUMBER +
-            "?text=" +
-            encodeURIComponent(orderMessage);
-
-        window.location.href = whatsappLink;
+        openWhatsApp(message);
     });
+}
 
-    // Set the minimum date to today.
-    const dateField = findField(["preferredDate", "date"]);
+// Contact links open WhatsApp directly
+["contactWhatsApp", "floatingWhatsApp"].forEach(function (id) {
+    const link = document.getElementById(id);
 
-    if (dateField && dateField.type === "date") {
-        const today = new Date();
-        const localDate = new Date(
-            today.getTime() -
-            today.getTimezoneOffset() * 60000
-        ).toISOString().split("T")[0];
+    if (link) {
+        link.addEventListener("click", function (event) {
+            if (!isWhatsAppNumberConfigured()) {
+                event.preventDefault();
 
-        dateField.min = localDate;
+                alert(
+                    "Please check Kelly Laundry's WhatsApp number in script.js."
+                );
+            }
+        });
     }
-
-    // Update the copyright year.
-    const year = document.getElementById("year");
-
-    if (year) {
-        year.textContent = new Date().getFullYear();
-    }
-
 });
