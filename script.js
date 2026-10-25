@@ -6,12 +6,38 @@
 const LAUNDRY_WHATSAPP_NUMBER = "2348060757524";
 
 const orderForm = document.getElementById("orderForm");
-const serviceSelect = document.getElementById("serviceType");
-const formError = document.getElementById("formError");
-const menuToggle = document.getElementById("menuToggle");
-const mainNav = document.getElementById("mainNav");
 
-// Set the earliest available date to today.
+orderForm.addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    const whatsappNumber = "2348060757524"; // Replace with your real number
+
+    const name = document.getElementById("name").value.trim();
+    const phone = document.getElementById("phone").value.trim();
+    const service = document.getElementById("service").value;
+    const quantity = document.getElementById("quantity").value;
+    const date = document.getElementById("date").value;
+    const address = document.getElementById("address").value.trim();
+    const instructions =
+        document.getElementById("instructions")?.value.trim() || "None";
+
+    const message =
+        `Hello Kelly Laundry! I want to place an order.\n\n` +
+        `Name: ${name}\n` +
+        `Phone: ${phone}\n` +
+        `Service: ${service}\n` +
+        `Quantity: ${quantity}\n` +
+        `Preferred Date: ${date}\n` +
+        `Address: ${address}\n` +
+        `Instructions: ${instructions}`;
+
+    const whatsappURL =
+        `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+
+    window.location.href = whatsappURL;
+});
+
+*// Set the earliest available date to today.
 const preferredDate = document.getElementById("preferredDate");
 const today = new Date();
 const localToday = new Date(today.getTime() - today.getTimezoneOffset() * 60000)
@@ -26,7 +52,7 @@ function whatsappUrl(message) {
 function isWhatsAppNumberConfigured() {
   return /^\d{10,15}$/.test(LAUNDRY_WHATSAPP_NUMBER) &&
          LAUNDRY_WHATSAPP_NUMBER !== "2348060757524";
-}
+}*/
 
 /*function showWhatsAppSetupMessage() {
   alert("Please set Kelly Laundry's real WhatsApp number in script.js first. Find LAUNDRY_WHATSAPP_NUMBER near the top and replace the sample number.");
