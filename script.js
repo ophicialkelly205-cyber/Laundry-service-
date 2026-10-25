@@ -1,9 +1,9 @@
 /*
   KELLY LAUNDRY WEBSITE SETTINGS
   IMPORTANT: Replace the sample WhatsApp number below with the business number.
-  Use international format without +, spaces or dashes. Example Nigeria: 08060757524
+  Use international format without +, spaces or dashes. Example Nigeria: +23408060757524
 */
-const LAUNDRY_WHATSAPP_NUMBER = "08060757524";
+const LAUNDRY_WHATSAPP_NUMBER = "+23408060757524";
 
 const orderForm = document.getElementById("orderForm");
 const serviceSelect = document.getElementById("serviceType");
@@ -24,8 +24,8 @@ function whatsappUrl(message) {
 }
 
 function isWhatsAppNumberConfigured() {
-  return /^\d{10,15}$/.test(08060757524) &&
-         LAUNDRY_WHATSAPP_NUMBER !== "08060757524";
+  return /^\d{10,15}$/.test(LAUNDRY_WHATSAPP_NUMBER) &&
+         LAUNDRY_WHATSAPP_NUMBER !== "+23408060757524";
 }
 
 /*function showWhatsAppSetupMessage() {
