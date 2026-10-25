@@ -131,6 +131,26 @@ document.querySelectorAll("[data-service]").forEach(function (link) {
 });
 
 // Handle the order form only once
+if (orderForm) {
+    orderForm.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        if (formError) {
+            formError.textContent = "";
+        }
+
+        if (!orderForm.reportValidity()) {
+            return;
+        }
+
+       */ if (!customerName || !customerPhone ||
+            !serviceSelect || !addressField) {
+            alert(
+                "Some order form fields are missing. Please check index.html."
+            );
+            return;
+        }*/
+
 const nameField =
     document.getElementById("customerName") ||
     document.getElementById("name");
@@ -146,6 +166,7 @@ if (!nameField || !phoneField || !serviceField || !addressInput) {
     alert("Form error: Please check the IDs in index.html.");
     return;
 }
+
 const data = {
     name: nameField.value.trim(),
     phone: phoneField.value.trim(),
@@ -162,7 +183,6 @@ const data = {
         document.getElementById("instructions")
     )?.value.trim() || "None"
 };
-
         const name = customerName.value.trim();
         const phone = customerPhone.value.trim();
         const service = serviceSelect.value;
