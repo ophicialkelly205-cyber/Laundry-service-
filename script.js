@@ -1,134 +1,205 @@
-/*
-  KELLY LAUNDRY WEBSITE SETTINGS
-  IMPORTANT: Replace the sample WhatsApp number below with the business number.
-  Use international format without +, spaces or dashes. Example Nigeria: 23408060757524
-*/
+// =====================================
+// KELLY LAUNDRY WEBSITE JAVASCRIPT
+// =====================================
+
+// Business WhatsApp number
+// International format: country code + number, without +
+// Example: 2348012345678
 const LAUNDRY_WHATSAPP_NUMBER = "2348060757524";
 
+// Find website elements
 const orderForm = document.getElementById("orderForm");
+const menuToggle = document.getElementById("menuToggle");
+const mainNav = document.getElementById("mainNav");
 
-orderForm.addEventListener("submit", function (event) {
-    event.preventDefault();
+// Support either version of the form's field IDs
+const customerName = document.getElementById("customerName") ||
+                     document.getElementById("name");
 
-    const whatsappNumber = "2348060757524"; // Replace with your real number
+const customerPhone = document.getElementById("customerPhone") ||
+                      document.getElementById("phone");
 
-    const name = document.getElementById("name").value.trim();
-    const phone = document.getElementById("phone").value.trim();
-    const service = document.getElementById("service").value;
-    const quantity = document.getElementById("quantity").value;
-    const date = document.getElementById("date").value;
-    const address = document.getElementById("address").value.trim();
-    const instructions =
-        document.getElementById("instructions")?.value.trim() || "None";
+const serviceSelect = document.getElementById("service");
 
-    const message =
-        `Hello Kelly Laundry! I want to place an order.\n\n` +
-        `Name: ${name}\n` +
-        `Phone: ${phone}\n` +
-        `Service: ${service}\n` +
-        `Quantity: ${quantity}\n` +
-        `Preferred Date: ${date}\n` +
-        `Address: ${address}\n` +
-        `Instructions: ${instructions}`;
+const quantityField = document.getElementById("quantity");
 
-    const whatsappURL =
-        `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+const preferredDate = document.getElementById("preferredDate") ||
+                      document.getElementById("date");
 
-    window.location.href = whatsappURL;
-});
+const addressField = document.getElementById("address");
 
-*// Set the earliest available date to today.
-const preferredDate = document.getElementById("preferredDate");
-const today = new Date();
-const localToday = new Date(today.getTime() - today.getTimezoneOffset() * 60000)
-  .toISOString().split("T")[0];
-preferredDate.min = localToday;
-document.getElementById("year").textContent = new Date().getFullYear();
+const instructionsField = document.getElementById("notes") ||
+                          document.getElementById("instructions");
 
-function whatsappUrl(message) {
-  return `https://wa.me/${LAUNDRY_WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
-}
+const formError = document.getElementById("formError");
 
+// Check that the WhatsApp number is configured
 function isWhatsAppNumberConfigured() {
-  return /^\d{10,15}$/.test(LAUNDRY_WHATSAPP_NUMBER) &&
-         LAUNDRY_WHATSAPP_NUMBER !== "2348060757524";
-}*/
-
-/*function showWhatsAppSetupMessage() {
-  alert("Please set Kelly Laundry's real WhatsApp number in script.js first. Find LAUNDRY_WHATSAPP_NUMBER near the top and replace the sample number.");
-}*/
-
-function setContactLinks() {
-  const message = "Hello Kelly Laundry, I would like to ask about your laundry services.";
-  const href = whatsappUrl(message);
-  document.getElementById("contactWhatsApp").href = href;
-  document.getElementById("floatingWhatsApp").href = href;
+    return /^\d{10,15}$/.test(LAUNDRY_WHATSAPP_NUMBER);
 }
+
+// Generate WhatsApp link
+function whatsappUrl(message) {
+    return "https://wa.me/" +
+        LAUNDRY_WHATSAPP_NUMBER +
+        "?text=" +
+        encodeURIComponent(message);
+}
+
+// Open WhatsApp with a message
+function openWhatsApp(message) {
+    if (!isWhatsAppNumberConfigured()) {
+        alert("Please check Kelly Laundry's WhatsApp number in script.js.");
+        return;
+    }
+
+    window.location.href = whatsappUrl(message);
+}
+
+// Set the current year in the footer
+const yearElement = document.getElementById("year");
+
+if (yearElement) {
+    yearElement.textContent = new Date().getFullYear();
+}
+
+// Prevent customers from selecting a date in the past
+if (preferredDate) {
+    const today = new Date();
+
+    const localToday = new Date(
+        today.getTime() - today.getTimezoneOffset() * 60000
+    ).toISOString().split("T")[0];
+
+    preferredDate.min = localToday;
+}
+
+// WhatsApp contact links
+function setContactLinks() {
+    const message =
+        "Hello Kelly Laundry, I would like to ask about your laundry services.";
+
+    const contactWhatsApp = document.getElementById("contactWhatsApp");
+    const floatingWhatsApp = document.getElementById("floatingWhatsApp");
+
+    const href = whatsappUrl(message);
+
+    if (contactWhatsApp) {
+        contactWhatsApp.href = href;
+    }
+
+    if (floatingWhatsApp) {
+        floatingWhatsApp.href = href;
+    }
+}
+
 setContactLinks();
 
-menuToggle.addEventListener("click", () => {
-  const open = mainNav.classList.toggle("open");
-  menuToggle.setAttribute("aria-expanded", String(open));
-  menuToggle.setAttribute("aria-label", open ? "Close navigation" : "Open navigation");
-  menuToggle.textContent = open ? "×" : "☰";
-});
-mainNav.querySelectorAll("a").forEach(link => {
-  link.addEventListener("click", () => {
-    mainNav.classList.remove("open");
-    menuToggle.setAttribute("aria-expanded", "false");
-    menuToggle.setAttribute("aria-label", "Open navigation");
-    menuToggle.textContent = "☰";
-  });
+// Mobile navigation menu
+if (menuToggle && mainNav) {
+    menuToggle.addEventListener("click", function () {
+        const isOpen = mainNav.classList.toggle("open");
+
+        menuToggle.setAttribute("aria-expanded", String(isOpen));
+
+        menuToggle.setAttribute(
+            "aria-label",
+            isOpen ? "Close navigation" : "Open navigation"
+        );
+
+        menuToggle.textContent = isOpen ? "×" : "☰";
+    });
+
+    mainNav.querySelectorAll("a").forEach(function (link) {
+        link.addEventListener("click", function () {
+            mainNav.classList.remove("open");
+
+            menuToggle.setAttribute("aria-expanded", "false");
+            menuToggle.setAttribute("aria-label", "Open navigation");
+            menuToggle.textContent = "☰";
+        });
+    });
+}
+
+// Select a service when a service link is clicked
+document.querySelectorAll("[data-service]").forEach(function (link) {
+    link.addEventListener("click", function () {
+        if (serviceSelect) {
+            serviceSelect.value = link.dataset.service;
+        }
+    });
 });
 
-document.querySelectorAll("[data-service]").forEach(link => {
-  link.addEventListener("click", () => {
-    serviceSelect.value = link.dataset.service;
-  });
-});
+// Handle the order form only once
+if (orderForm) {
+    orderForm.addEventListener("submit", function (event) {
+        event.preventDefault();
 
-["contactWhatsApp", "floatingWhatsApp"].forEach(id => {
-  document.getElementById(id).addEventListener("click", event => {
-    if (!isWhatsAppNumberConfigured()) {
-      event.preventDefault();
-      showWhatsAppSetupMessage();
+        if (formError) {
+            formError.textContent = "";
+        }
+
+        if (!orderForm.reportValidity()) {
+            return;
+        }
+
+        if (!customerName || !customerPhone ||
+            !serviceSelect || !addressField) {
+            alert(
+                "Some order form fields are missing. Please check index.html."
+            );
+            return;
+        }
+
+        const name = customerName.value.trim();
+        const phone = customerPhone.value.trim();
+        const service = serviceSelect.value;
+
+        const quantity = quantityField
+            ? quantityField.value.trim() || "Not specified"
+            : "Not specified";
+
+        const date = preferredDate
+            ? preferredDate.value || "Not specified"
+            : "Not specified";
+
+        const address = addressField.value.trim();
+
+        const instructions = instructionsField
+            ? instructionsField.value.trim() || "None"
+            : "None";
+
+        const message = [
+            "Hello Kelly Laundry! I'd like to place a laundry order.",
+            "",
+            "Name: " + name,
+            "Customer phone: " + phone,
+            "Service: " + service,
+            "Estimated quantity: " + quantity,
+            "Preferred date: " + date,
+            "Pickup/drop-off address: " + address,
+            "Additional instructions: " + instructions,
+            "",
+            "Please confirm the price and availability. Thank you."
+        ].join("\n");
+
+        openWhatsApp(message);
+    });
+}
+
+// Contact links open WhatsApp directly
+["contactWhatsApp", "floatingWhatsApp"].forEach(function (id) {
+    const link = document.getElementById(id);
+
+    if (link) {
+        link.addEventListener("click", function (event) {
+            if (!isWhatsAppNumberConfigured()) {
+                event.preventDefault();
+
+                alert(
+                    "Please check Kelly Laundry's WhatsApp number in script.js."
+                );
+            }
+        });
     }
-  });
-});
-
-orderForm.addEventListener("submit", event => {
-  event.preventDefault();
-  formError.textContent = "";
-
-  if (!orderForm.reportValidity()) return;
-  if (!isWhatsAppNumberConfigured()) {
-    showWhatsAppSetupMessage();
-    return;
-  }
-
-  const data = {
-    name: document.getElementById("customerName").value.trim(),
-    phone: document.getElementById("customerPhone").value.trim(),
-    service: serviceSelect.value,
-    quantity: document.getElementById("quantity").value.trim() || "Not specified",
-    date: preferredDate.value,
-    address: document.getElementById("address").value.trim(),
-    notes: document.getElementById("notes").value.trim() || "None"
-  };
-
-  const message = [
-    "Hello Kelly Laundry! I'd like to place a laundry order.",
-    "",
-    `Name: ${data.name}`,
-    `Customer phone: ${data.phone}`,
-    `Service: ${data.service}`,
-    `Estimated quantity: ${data.quantity}`,
-    `Preferred date: ${data.date}`,
-    `Pickup/drop-off address: ${data.address}`,
-    `Additional instructions: ${data.notes}`,
-    "",
-    "Please confirm the price and availability. Thank you."
-  ].join("\n");
-
-  window.open(whatsappUrl(message), "_blank", "noopener,noreferrer");
 });
