@@ -131,25 +131,37 @@ document.querySelectorAll("[data-service]").forEach(function (link) {
 });
 
 // Handle the order form only once
-if (orderForm) {
-    orderForm.addEventListener("submit", function (event) {
-        event.preventDefault();
+const nameField =
+    document.getElementById("customerName") ||
+    document.getElementById("name");
 
-        if (formError) {
-            formError.textContent = "";
-        }
+const phoneField =
+    document.getElementById("customerPhone") ||
+    document.getElementById("phone");
 
-        if (!orderForm.reportValidity()) {
-            return;
-        }
+const serviceField = document.getElementById("service");
+const addressInput = document.getElementById("address");
 
-        if (!customerName || !customerPhone ||
-            !serviceSelect || !addressField) {
-            alert(
-                "Some order form fields are missing. Please check index.html."
-            );
-            return;
-        }
+if (!nameField || !phoneField || !serviceField || !addressInput) {
+    alert("Form error: Please check the IDs in index.html.");
+    return;
+}
+const data = {
+    name: nameField.value.trim(),
+    phone: phoneField.value.trim(),
+    service: serviceField.value,
+    quantity: document.getElementById("quantity")?.value.trim()
+        || "Not specified",
+    date: (
+        document.getElementById("preferredDate") ||
+        document.getElementById("date")
+    )?.value || "Not specified",
+    address: addressInput.value.trim(),
+    notes: (
+        document.getElementById("notes") ||
+        document.getElementById("instructions")
+    )?.value.trim() || "None"
+};
 
         const name = customerName.value.trim();
         const phone = customerPhone.value.trim();
